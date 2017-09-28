@@ -47,4 +47,22 @@ class BookDetailView(DetailView):
 	def get_context_data(self, **kwargs):
 		context = super(BookDetailView, self).get_context_data(**kwargs)
 		return context
+class AuthorListView(generic.ListView):
 
+	def get(self, request):
+		authors = Author.objects.all()
+		paginate_by = 2
+		context = {
+			'authors': authors,
+		}
+		return render(request, "author_list.html", context)
+
+
+		
+class AuthorDetailView(DetailView):
+	model = Book
+	template_name = "author_detail.html"
+	
+	def get_context_data(self, **kwargs):
+		context = super(AuthorDetailView, self).get_context_data(**kwargs)
+		return context
