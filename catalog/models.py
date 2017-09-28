@@ -8,10 +8,11 @@ import uuid
 
 
 class Genre(models.Model):
-	name= models.CharField(max_length=150, help_text="Enter a book genre (e.g. Science Fiction, French Poetry etc.)")
+	Name= models.CharField(max_length=150, help_text="Enter a book genre (e.g. Science Fiction, French Poetry etc.)")
 	
 	def __str__(self):
-		return self.genre_name
+		return self.Name
+
 
 class Book(models.Model):
 	title = models.CharField(max_length=200)
@@ -25,6 +26,13 @@ class Book(models.Model):
 	
 	def get_absolute_url(self):
 		return reverse('book-detail', args=[str(self.id)])
+		
+	def display_genre(self):
+		return ', '.join([ genre.Name for genre in self.genre.all()[:3] ])
+		display_genre.short_description = 'Genre'
+
+
+
 
 
 class BookInstance(models.Model):
