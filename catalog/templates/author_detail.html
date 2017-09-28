@@ -3,8 +3,17 @@
 {% block content %}
 
 <h1>Author: {{ book.author }} </h1>
-	 {{ object.date_of_birth }}</p>
+	{{ book.author.date_of_birth}}
+	
+<div style="margin-left:20px;margin-top:20px">
+		<h1>BOOKS<h1>
+        <a href="{{ books.get_absolute_url }}">{{ book.title }}</a>
+		<p>{{ book.summary }}</p>
+  
 
-
+		
+  </div>
 {% endblock %}
+
+
 

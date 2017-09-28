@@ -8,7 +8,7 @@
 
       {% for authors in authors %}
       <li>
-        <a href="{{ authors.get_absolute_url }}">{{ authors.first_name }} {{ authors.last_name }}</a> ({{authors.date_of_birth }})
+        <a href="{{ authors.get_absolute_url }}">{{ authors.first_name }} {{ authors.last_name }}</a> <a>({{authors.date_of_birth }})</a>
       </li>
       {% endfor %}
 
