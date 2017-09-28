@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from .models import Book, Author, BookInstance, Genre
 from django.views import generic
+from django.views.generic import DetailView
 
 
 
@@ -34,18 +35,11 @@ def get_context_data(self, **kwargs):
 	context = super(BookListView, self).get_context_data(**kwargs)
 	context['some_data'] = 'This is just some data'
 	return context
-
-class BookDetailView(generic.DetailView):
-	model = Book
 	
-def book_detail_view(request,pk):
-    try:
-        book_id=Book.objects.get(pk=pk)
-    except Book.DoesNotExist:
-        raise Http404("Book does not exist")
-	#book_id=get_object_or_404(Book, pk=pk)
-    
-    return render(
-        request,
-        'book_detail.html',
-        context={'book':book_id,})
+class BookDetailView(DetailView):
+	model = Book
+	template_name = "book_detail.html"
+	
+	def get_context_data(self, **kwargs):
+		context = super(BookDetailView, self).get_context_data(**kwargs)
+		return context
