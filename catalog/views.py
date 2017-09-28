@@ -20,11 +20,15 @@ def index(request):
         'index.html',
         context={'num_books':num_books,'num_instances':num_instances,'num_instances_available':num_instances_available,'num_authors':num_authors},
     )
+	
+
 
 class BookListView(generic.ListView):
+
 	def get(self, request):
-		queryset = Book.objects.filter(title__icontains='war')[:5] # Get 5 books containing the title war
+		queryset = Book.objects.filter(title__icontains='war')[:5] 
 		books = Book.objects.all()
+		paginate_by = 2
 		context = {
 			'books': books,
 		}
@@ -43,3 +47,4 @@ class BookDetailView(DetailView):
 	def get_context_data(self, **kwargs):
 		context = super(BookDetailView, self).get_context_data(**kwargs)
 		return context
+
