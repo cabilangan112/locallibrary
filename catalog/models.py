@@ -3,6 +3,10 @@ from __future__ import unicode_literals
 from django.urls import reverse 
 from django.db import models
 import uuid 
+from django.contrib.auth.models import User
+from datetime import date
+
+
 
 
 
@@ -36,26 +40,35 @@ class Book(models.Model):
 
 
 class BookInstance(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Unique ID for this particular book across whole library")
-    book = models.ForeignKey('Book', on_delete=models.SET_NULL, null=True) 
-    imprint = models.CharField(max_length=200)
-    due_back = models.DateField(null=True, blank=True)
+	id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="Unique ID for this particular book across whole library")
+	book = models.ForeignKey('Book', on_delete=models.SET_NULL, null=True) 
+	imprint = models.CharField(max_length=200)
+	due_back = models.DateField(null=True, blank=True)
+	borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
-    LOAN_STATUS = (
+	LOAN_STATUS = (
         ('m', 'Maintenance'),
         ('o', 'On loan'),
         ('a', 'Available'),
         ('r', 'Reserved'),
-    )
+	)
+	status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='m', help_text='Book availability')
+	
+	def is_overdue(self):
+		if self.due_back and date.today() > self.due_back:
+			return True
+			return False
 
-    status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='m', help_text='Book availability')
 
-    class Meta:
-        ordering = ["due_back"]
+	
+	class Meta:
+		ordering = ["due_back"]
+		permissions = (("can_mark_returned", "Set book as returned"),)
+	
         
 
-    def __str__(self):
-        return '%s (%s)' % (self.id,self.book.title)
+	def __str__(self):
+		return '%s (%s)' % (self.id,self.book.title)
 
 	
 class Author(models.Model):

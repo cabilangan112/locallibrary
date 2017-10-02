@@ -5,6 +5,7 @@ from django.shortcuts import render
 from .models import Book, Author, BookInstance, Genre
 from django.views import generic
 from django.views.generic import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 
@@ -70,3 +71,11 @@ class AuthorDetailView(DetailView):
 	def get_context_data(self, **kwargs):
 		context = super(AuthorDetailView, self).get_context_data(**kwargs)
 		return context
+
+class LoanedBooksByUserListView(LoginRequiredMixin,generic.ListView):
+	model = BookInstance
+	template_name ='bookinstance_list_borrowed_user.html'
+	paginate_by = 10
+	
+	def get_queryset(self):
+		return BookInstance.objects.filter(borrower=self.request.user).filter(status__exact='o').order_by('due_back')
